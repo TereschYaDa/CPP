@@ -5,40 +5,33 @@
 #include "Dish.h"
 
 class Order {
-    private:
     Dishes dishes;
-    float totalPrice;
-    unsigned short totalCalorie;
-    unsigned short timeOrder;
-    unsigned short quantityOfDishes;
-    short i;
-//    friend vector<Dish> createDishesStore();
-//    friend ostream &operator<< (ostream &os, Orders order); // шаманство с выводом
+    float orderPrice; // warning
+    int orderTotalCalorie;
+    int orderCookingTime;
+    int quantityOfDishes;
+    int i;
+
     void invalidateIterator() {
         i = -1;
     }
     
     public:
-    Order(){
-        totalPrice = 0;
-        totalCalorie = 0;
-        timeOrder = 0;
-        quantityOfDishes = 0;
-        // date 
-    }
-    unsigned short getQuantity() {
+    Order(): orderPrice(0), orderCookingTime(0), orderTotalCalorie(0), quantityOfDishes(0){}
+
+    int getQuantity() const {
         return dishes.size();
     }
-    float getTotalPrice() {
-        return totalPrice;
+    float getTotalPrice() const {
+        return orderPrice;
     }
-    unsigned short getTotalCalorie() {
-        return totalCalorie;
+    int getTotalCalorie() const {
+        return orderTotalCalorie;
     }
-    unsigned short getTimeOrder() {
-        return timeOrder;
+    int getTimeOrder() const {
+        return orderCookingTime;
     }
-    unsigned short getQuantityOfDishes() {
+    int getQuantityOfDishes() const {
         return quantityOfDishes;
     }
     Dish getFirstElem() {
@@ -47,7 +40,6 @@ class Order {
             return dishes[0];
         }
         else {
-            // cout << "В списке заказа ничего нет.";
 		// either use smart pointer instead of object or throw exception
         }
     }
@@ -57,9 +49,9 @@ class Order {
             return dishes[i];
         }
     }
-    void addDishInMenu(std::string name, unsigned short time, bool drink, unsigned short calorie, float price) {
+    void addDishInMenu(std::string name, int time, bool drink, int calorie, float price) { // warning
         Dish newDish(name, time, drink, calorie, price);
         dishes.push_back(newDish);
-        invalidateIterator(); // так вообще можно?
+        invalidateIterator();
     }
 };

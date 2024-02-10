@@ -9,5 +9,5 @@ class Customer
 	time_t lastVisit;
 
 public:
-	Customer(std::string customerName) : name(customerName), totalSpending(0), lastVisit(0) {}
+	Customer(std::string customerName) : name(customerName), totalSpending(0), lastVisit(0) {} // нахрен нам тут ласт визит
 };

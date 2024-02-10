@@ -3,35 +3,34 @@
 #include <string>
 
 class Dish {
-    private:
     std::string nameOfDish;
-    unsigned short time;
+    int cookingTime;
     bool drink;
-    unsigned short calorie;
-    float price;
+    int calorieOfDish;
+    float priceOfDish; // warning
 
     public:
-    Dish(std::string name, unsigned short time, bool drink, unsigned short calorie, float price) {
+    Dish(std::string name, int time, bool drink, int calorie, float price) {
         nameOfDish = name;
-        this->time = time;
+        cookingTime = time;
         this->drink = drink;
-        this->calorie = calorie;
-        this->price = price;
+        calorieOfDish = calorie;
+        priceOfDish = price;
     }
-    std::string getNameOfDishe() const {
+    std::string getNameOfDish() const {
         return nameOfDish;
     }
-    unsigned short getTime() {
-        return time;
+    int getTime() const {
+        return cookingTime;
     }
-    bool getDrink() {
+    bool getDrink() const {
         return drink;
     }
-    unsigned short getCalorie() {
-        return calorie;
+    int getCalorie() const {
+        return calorieOfDish;
     }
-    float getPrice() {
-        return price;
+    float getPrice() const {
+        return priceOfDish;
     }
 };
 

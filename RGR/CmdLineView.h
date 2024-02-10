@@ -18,7 +18,7 @@ public:
 		for (std::vector<Dish>::const_iterator it = model.KnownDishes().begin(); it != model.KnownDishes().end(); it++)
 		{
 //			console << "dish" << std::endl;
-			console << it->getNameOfDishe() << std::endl;
+			console << it->getNameOfDish() << std::endl;
 		}
 	}
 };
