@@ -1,37 +1,36 @@
 #pragma once
 
 #include <string>
+#include <map>
 
 class Dish {
-    std::string nameOfDish;
-    int cookingTime;
-    bool drink;
-    int calorieOfDish;
-    float priceOfDish; // warning
+    std::string _name;
+    int _cookingTime;
+    int _calorie;
+    int _price; // price in kopeykas
 
     public:
-    Dish(std::string name, int time, bool drink, int calorie, float price) {
-        nameOfDish = name;
-        cookingTime = time;
-        this->drink = drink;
-        calorieOfDish = calorie;
-        priceOfDish = price;
+    Dish(std::string name, int time, int calorie, int price) {
+        _name = name;
+        _cookingTime = time;
+        _calorie = calorie;
+        _price = price;
     }
-    std::string getNameOfDish() const {
-        return nameOfDish;
+
+    std::string name() const {
+        return _name;
     }
-    int getTime() const {
-        return cookingTime;
+    int cookingTime() const {
+        return _cookingTime;
     }
-    bool getDrink() const {
-        return drink;
+    
+    int calorie() const {
+        return _calorie;
     }
-    int getCalorie() const {
-        return calorieOfDish;
-    }
-    float getPrice() const {
-        return priceOfDish;
+    int price() const {
+        return _price;
     }
 };
 
 typedef std::vector<Dish> Dishes;
+typedef std::map<std::string, Dish> DishesMap;

@@ -1,57 +1,57 @@
 #pragma once
 
-#include <vector>
+#include <map>
 
 #include "Dish.h"
 
 class Order {
-    Dishes dishes;
-    float orderPrice; // warning
-    int orderTotalCalorie;
-    int orderCookingTime;
-    int quantityOfDishes;
-    int i;
+    Dishes _dishes;
+    int _id;
 
-    void invalidateIterator() {
-        i = -1;
-    }
-    
     public:
-    Order(): orderPrice(0), orderCookingTime(0), orderTotalCalorie(0), quantityOfDishes(0){}
+    Order(int id) : _id(id) {}
 
-    int getQuantity() const {
-        return dishes.size();
+    size_t quantity() const {
+        return _dishes.size();
     }
-    float getTotalPrice() const {
-        return orderPrice;
+
+    int id() const {
+        return _id;
     }
-    int getTotalCalorie() const {
-        return orderTotalCalorie;
-    }
-    int getTimeOrder() const {
-        return orderCookingTime;
-    }
-    int getQuantityOfDishes() const {
-        return quantityOfDishes;
-    }
-    Dish getFirstElem() {
-        if (!dishes.empty()) {
-            i = 0;
-            return dishes[0];
+
+    int totalPrice() const {
+        int totalPrice = 0;
+        for (Dishes::const_iterator cit = _dishes.begin(); cit != _dishes.end(); ++cit) {
+            totalPrice += cit->price();
         }
-        else {
-		// either use smart pointer instead of object or throw exception
-        }
+
+        return totalPrice;
     }
-    Dish getNextElem() {
-        if (i != -1 && i < getQuantity() - 1) {
-            i += 1;
-            return dishes[i];
+
+    int totalCalorie() const {
+        int totalCalorie = 0;
+        for (Dishes::const_iterator cit = _dishes.begin(); cit != _dishes.end(); ++cit) {
+            totalCalorie += cit->calorie();
         }
+        
+        return totalCalorie;
     }
-    void addDishInMenu(std::string name, int time, bool drink, int calorie, float price) { // warning
-        Dish newDish(name, time, drink, calorie, price);
-        dishes.push_back(newDish);
-        invalidateIterator();
+
+    int timeOrder() const {
+        int maxCookingTime = 0;
+        for (Dishes::const_iterator cit = _dishes.begin(); cit != _dishes.end(); ++cit) {
+            /*if (maxCookingTime <= cit->cookingTime())
+                maxCookingTime = cit->cookingTime();*/
+            
+            maxCookingTime = (maxCookingTime <= cit->cookingTime()) ? cit->cookingTime() : maxCookingTime;
+        }
+
+        return maxCookingTime; 
+    }
+
+    void addDish(const Dish &dish) {
+        _dishes.push_back(dish);
     }
 };
+
+typedef std::map<int, Order> Orders;

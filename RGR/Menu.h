@@ -6,9 +6,24 @@
 
 class Menu
 {
-	std::map<std::string, Dish> dishes; // почему меню это словарь?
-	time_t actualSince; // что за actualSince и нафига здесь time_t
+	DishesMap _dishes;
 
 public:
-	Menu() : actualSince(0) {}
+	Menu() { addDish(Dish("cat", 100, 10000, 1234)); }
+
+	void addDish(const Dish& dish) {
+		_dishes.insert(DishesMap::value_type(dish.name(), dish));
+	}
+
+	int quantity() const {
+		return _dishes.size();
+	}
+
+	const DishesMap & allDishes() const {
+		return _dishes;
+	}
+
+	/*std::string name() const {
+		return 
+	}*/
 };

@@ -3,69 +3,158 @@
 #include <algorithm>
 
 #include "Model.h"
+#include "Dish.h"
 #include "Controller.h"
 #include "CmdLineView.h"
 
 using namespace std;
 
-// model view controller
-/*
-vector<Dish> createDishesStore() {
-    Orders order = Orders();
-    Dish dog("Dog", 40, false, 1000, 1400);
-    Dish cat("Cat", 20, false, 1000, 900);
-    Dish duck("Duck", 15, false, 1200, 1300);
-    order.dishes.push_back(dog);               // нужны ли здесь ссылки (linkOnDishes вместо dishes)?
-    order.dishes.push_back(cat);
-    order.dishes.push_back(duck);
-    return order.dishes;
-};
-*/
-// controller
-
-
-
-
-// view:
-void printMenu() {
-    cout << "Выберете команду:\n1) Добавить блюдо к заказу\n2) Удалить блюдо из заказа\n3) Инфо о блюде\n4) Редактирование пользователя\n5) Добавить новое блюдо в МЕНЮ\n6) Удалить блюдо из МЕНЮ";
-}
-
-void processAddDishInMenu() {
-    string name;
-    unsigned short time;
-    bool drink;
-    unsigned short calorie;
-    float price;
-    bool correct = false;
-    cin >> name;
-    while (correct != true) {
-        cin >> time; // эээ ну тут обработка ошибки некорректного ввода (типа данных) должна быть, но я хз как это сделать
-    }
-}
-
-ostream &operator<< (ostream &os, Order order) {
-//    os << order.dishes;
-    return os;
-}
-
-void PrintMenu()
-{
-	cout << "..." << endl;
-}
-
-bool ProcessReaction(Controller &controller, CmdLineView &view)
+string readInput()
 {
 	string s;
-	std::getline(cin, s);
+	do {
+		getline(cin, s);
+		s.erase(remove_if(s.begin(), s.end(), [](char c) { return std::isspace(c); }), s.end());
+	} while (s.empty());
 
-	std::remove_if(s.begin(), s.end(), [](char c) { return std::isspace(c); });
+	return s;
+}
 
-	if (s.empty())
-		return false;
+string readDishName() {
+	cout << "Enter dish name:" << endl;
 
-	if (s == "p")
-		view.printDishesList();
+	return readInput();
+}
+
+int readOrderId() {
+	int id;
+	cout << "Enter order id:" << endl;
+	while (true) {
+		string s = readInput();
+		try {
+			id = stoi(s);
+			break;
+		}
+		catch (invalid_argument& e) {}
+	}
+
+	return id;
+}
+
+Dish readDish() { // наверное сделать отдельную функцию проверки на число
+	std::string name;
+	int calorie, price, time;
+	cout << "Enter dish details (name, time, calorie, price):" << endl;
+	name = readInput();
+	while (true) {
+		string s = readInput();
+		try {
+			calorie = stoi(s);
+			break;
+		}
+		catch (invalid_argument& e) {}
+	}
+	while (true) {
+		string s = readInput();
+		try {
+			price = stoi(s);
+			break;
+		}
+		catch (invalid_argument& e) {}
+	}
+	
+	while (true) {
+		string s = readInput();
+		try {
+			time = stoi(s);
+			break;
+		}
+		catch (invalid_argument& e) {}
+	}
+
+	return Dish(name, time, calorie, price);
+}
+
+Order readOrder() {
+	bool flag = true;
+	int id;
+	cout << "Enter order id:" << endl;
+	while (true) {
+		string s = readInput();
+		try {
+			id = stoi(s);
+			break;
+		}
+		catch (invalid_argument& e) {}
+	}
+
+	Order newOrder = Order(id);
+	while (flag) {
+		cout << "Add dish? (y/n)";
+		string answ = readInput();
+		if (answ == "y" || answ == "Y") {
+			Dish newDish = readDish();
+			newOrder.addDish(newDish); // тут с ссылками че как мудрить?
+		}
+		else if (answ == "n" || answ == "N") {
+			flag = false;
+		}
+	}
+
+	return newOrder;
+}
+
+void printMenu()
+{
+	cout << "Select an action:" << endl;
+	cout << "1) View menu" << endl;
+	cout << "2) View dish details" << endl;
+	cout << "3) View orders" << endl;
+	cout << "4) Add order" << endl;
+	cout << "5) Add dish to menu" << endl;
+	cout << "6) Edit dish details" << endl;
+	cout << "7) Remove dish from menu" << endl;
+	cout << "8) Remove order" << endl;
+	cout << "9) Exit program" << endl;
+}
+
+bool processReaction(Controller &controller, CmdLineView &view) // исключение для stoi
+{
+	try {
+		switch (stoi(readInput())) {
+		case 1:
+			view.printMenu();
+			break;
+		case 2:
+			while (!view.printDish(readDishName())) ;
+			break;
+		case 3:
+			view.printOrders();
+			break;
+		case 4:
+			controller.addOrder(readOrder());
+			break;
+		case 5:
+			controller.addDishToMenu(readDish());
+			break;
+		case 6:
+			view.printDish(readDishName());
+			cout << "Please enter corrected dish details" << endl;
+			controller.replaceDishInMenu(readDish());
+			break;
+		case 7:
+			controller.removeDishFromMenu(readDishName());
+			break;
+		case 8:
+			controller.removeOrder(readOrderId());
+			break;
+		case 9:
+			return false;
+		}
+	} catch (invalid_argument & e) { // почитать че такое try....
+		return true;
+	}
+		/*view.printDishesList();*/
 
 	// call appropriate Controller method
 
@@ -79,22 +168,11 @@ int main() {
 	Controller controller(model);
 	CmdLineView view(model, cout);
 
-	cout << "Welcome to cafe management!" << endl;
+
+	cout << "Welcome to cafe!" << endl;
 	do
-		PrintMenu();
-	while (ProcessReaction(controller, view));
+		printMenu();
+	while (processReaction(controller, view));
 
 	return 0;
 }
-
-
-// void printDishes(Orders &order) {
-//     for (size_t i = 0; i != dishes.size(); ++i) {
-//         order.totalPrice += dishes[i].price;
-//         totalCalorie += dishes[i].calorie;
-//         if (timeOrder < dishes[i].time) {
-//             timeOrder = dishes[i].time;
-//         };
-//     };
-// };
-
