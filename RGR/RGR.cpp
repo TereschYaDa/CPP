@@ -14,10 +14,24 @@ string readInput()
 	string s;
 	do {
 		getline(cin, s);
-		s.erase(remove_if(s.begin(), s.end(), [](char c) { return std::isspace(c); }), s.end());
+		s.erase(remove_if(s.begin(), s.end(), [](char c) { return isspace(c); }), s.end());
 	} while (s.empty());
 
 	return s;
+}
+
+int readInt() {
+	int integer;
+	while (true) {
+		string s = readInput();
+		try {
+			integer = stoi(s);
+			break;
+		}
+		catch (invalid_argument& e) { cout << "Incorrect input. Try again:" << endl; }
+	}
+
+	return integer;
 }
 
 string readDishName() {
@@ -29,77 +43,38 @@ string readDishName() {
 int readOrderId() {
 	int id;
 	cout << "Enter order id:" << endl;
-	while (true) {
-		string s = readInput();
-		try {
-			id = stoi(s);
-			break;
-		}
-		catch (invalid_argument& e) {}
-	}
+	id = readInt();
 
 	return id;
 }
 
-Dish readDish() { // наверное сделать отдельную функцию проверки на число
+Dish readDish() {
 	std::string name;
 	int calorie, price, time;
 	cout << "Enter dish details (name, time, calorie, price):" << endl;
 	name = readInput();
-	while (true) {
-		string s = readInput();
-		try {
-			calorie = stoi(s);
-			break;
-		}
-		catch (invalid_argument& e) {}
-	}
-	while (true) {
-		string s = readInput();
-		try {
-			price = stoi(s);
-			break;
-		}
-		catch (invalid_argument& e) {}
-	}
-	
-	while (true) {
-		string s = readInput();
-		try {
-			time = stoi(s);
-			break;
-		}
-		catch (invalid_argument& e) {}
-	}
+	calorie = readInt();
+	price = readInt();
+	time = readInt();
 
 	return Dish(name, time, calorie, price);
 }
 
 Order readOrder() {
-	bool flag = true;
 	int id;
 	cout << "Enter order id:" << endl;
-	while (true) {
-		string s = readInput();
-		try {
-			id = stoi(s);
-			break;
-		}
-		catch (invalid_argument& e) {}
-	}
+	id = readInt();
 
-	Order newOrder = Order(id);
-	while (flag) {
-		cout << "Add dish? (y/n)";
-		string answ = readInput();
+	Order newOrder(id);
+	string answ;
+	do {
+		cout << "Add dish? (y/n)" << endl;
+		answ = readInput();
 		if (answ == "y" || answ == "Y") {
 			Dish newDish = readDish();
-			newOrder.addDish(newDish); // тут с ссылками че как мудрить?
+			newOrder.addDish(newDish);
 		}
-		else if (answ == "n" || answ == "N") {
-			flag = false;
-		}
-	}
+	} while (answ != "n" && answ != "N");
 
 	return newOrder;
 }
@@ -118,7 +93,7 @@ void printMenu()
 	cout << "9) Exit program" << endl;
 }
 
-bool processReaction(Controller &controller, CmdLineView &view) // исключение для stoi
+bool processReaction(Controller &controller, CmdLineView &view)
 {
 	try {
 		switch (stoi(readInput())) {
@@ -151,28 +126,22 @@ bool processReaction(Controller &controller, CmdLineView &view) // исключ�
 		case 9:
 			return false;
 		}
-	} catch (invalid_argument & e) { // почитать че такое try....
+	} catch (invalid_argument & e) {
 		return true;
 	}
-		/*view.printDishesList();*/
-
-	// call appropriate Controller method
 
 	return true;
 }
 
 int main() {
-//    cout << createDishesStore();
-
 	Model model;
 	Controller controller(model);
 	CmdLineView view(model, cout);
 
-
 	cout << "Welcome to cafe!" << endl;
-	do
+	do {
 		printMenu();
-	while (processReaction(controller, view));
+	} while (processReaction(controller, view));
 
 	return 0;
 }

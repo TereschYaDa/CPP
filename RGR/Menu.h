@@ -12,7 +12,11 @@ public:
 	Menu() { addDish(Dish("cat", 100, 10000, 1234)); }
 
 	void addDish(const Dish& dish) {
-		_dishes.insert(DishesMap::value_type(dish.name(), dish));
+		_dishes.insert(DishesMap::value_type(dish.name(), dish)); 
+	}
+
+	void removeDish(const std::string & name) {
+		_dishes.erase(_dishes.find(name));
 	}
 
 	int quantity() const {
@@ -22,8 +26,4 @@ public:
 	const DishesMap & allDishes() const {
 		return _dishes;
 	}
-
-	/*std::string name() const {
-		return 
-	}*/
 };

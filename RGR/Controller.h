@@ -1,35 +1,51 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 #include "Model.h"
 
 class Controller
 {
-	Model &model;
+	Model &_model;
 
 public:
-	Controller(Model &m) : model(m) {}
+	Controller(Model &m) : _model(m) {}
 
 	bool addDishToOrder() { return false; }
 	
-	void addOrder(Order order) {
-		model.activeOrders().;
-		std::cout << "order is added" << std::endl;
+	void addOrder(const Order & order) {
+		_model.addOrder(order);
 	}
 
-	void addDishToMenu(Dish newDish) {
-		std::cout << "dish is added" << std::endl;
+	void addDishToMenu(const Dish & newDish) {
+		_model.addDish(newDish);
 	}
 
-	void replaceDishInMenu(Dish dish) {
-		// удалить по имени старое, добавить новое?
-		std::cout << "dish has been change" << std::endl;
+	void replaceDishInMenu(const Dish & dish) {
+		_model.addDish(dish); // test. []-?
 	}
 
-	void removeDishFromMenu(std::string name) {
-		std::cout << "dish has been removed" << std::endl;
+	void removeDishFromMenu(const std::string & name) {
+		_model.removeDish(name);
 	}
 
-	void removeOrder(int id) {
-		std::cout << "order has been removed" << std::endl;
+	void removeOrder(const int id) {
+		_model.removeOrder(id);
 	}
+
+	/*void saveToFile(std::string fileName){
+		std::ofstream out;
+		out.open(fileName);
+		if (out.is_open()) {
+			_model.serialize(out);
+			out.close();
+		}
+	}
+
+	void loadFromFile(std::string fileName) {
+		std::ifstream in(fileName);
+		if (in.is_open()) {
+			_model.deserialize(in);
+		}
+		in.close();
+	}*/
 };

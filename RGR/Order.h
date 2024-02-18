@@ -9,6 +9,7 @@ class Order {
     int _id;
 
     public:
+    Order() : _id(-1) {}
     Order(int id) : _id(id) {}
 
     size_t quantity() const {
@@ -39,10 +40,7 @@ class Order {
 
     int timeOrder() const {
         int maxCookingTime = 0;
-        for (Dishes::const_iterator cit = _dishes.begin(); cit != _dishes.end(); ++cit) {
-            /*if (maxCookingTime <= cit->cookingTime())
-                maxCookingTime = cit->cookingTime();*/
-            
+        for (Dishes::const_iterator cit = _dishes.begin(); cit != _dishes.end(); ++cit) {          
             maxCookingTime = (maxCookingTime <= cit->cookingTime()) ? cit->cookingTime() : maxCookingTime;
         }
 
@@ -51,6 +49,10 @@ class Order {
 
     void addDish(const Dish &dish) {
         _dishes.push_back(dish);
+    }
+
+    const Dishes& dishes() const {
+        return _dishes;
     }
 };
 
